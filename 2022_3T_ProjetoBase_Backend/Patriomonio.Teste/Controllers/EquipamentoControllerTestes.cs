@@ -1,5 +1,6 @@
 ﻿
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Patrimonio.Controllers;
@@ -36,6 +37,34 @@ namespace Patriomonio.Teste.Controllers
 
             //Assert
             Assert.True(resultado);
+        }
+
+        [Fact]
+        public void Deve_Criar_um_Equipamento()
+        {
+            //Arrange
+            var fakerepo = new Mock<IEquipamentoRepository>();
+
+            fakerepo
+                .Setup(x => x.Cadastrar(It.IsAny<Equipamento>())).Returns((Equipamento)null);
+
+
+            Equipamento fakeEquipamento =  new Equipamento();
+            var fileMock = new Mock<IFormFile>();
+            //Act
+            var controller = new EquipamentosController(fakerepo.Object);
+
+            var PostEquipamentoFake = controller.PostEquipamento(fakeEquipamento, fileMock.Object);
+
+            /*bool resultado = false;
+            if (PostEquipamentoFake != null)
+            {
+                resultado = true;
+            }
+            */
+
+            //Assert
+            Assert.IsType<CreatedResult>(PostEquipamentoFake);
         }
     }
 }
